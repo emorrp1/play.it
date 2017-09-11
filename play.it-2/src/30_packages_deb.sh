@@ -85,6 +85,11 @@ pkg_write_deb() {
 # CALLED BY: build_pkg
 pkg_build_deb() {
 	local pkg_filename="$PWD/${1##*/}.deb"
+	if [ -e "$pkg_filename" ]; then
+		pkg_build_print_already_exists "${pkg_filename##*/}"
+		export ${pkg}_PKG="$pkg_filename"
+		return 0
+	fi
 
 	local dpkg_options
 	case $OPTION_COMPRESSION in
@@ -99,5 +104,7 @@ pkg_build_deb() {
 	pkg_print "${pkg_filename##*/}"
 	TMPDIR="$PLAYIT_WORKDIR" fakeroot -- dpkg-deb $dpkg_options --build "$1" "$pkg_filename" 1>/dev/null
 	export ${pkg}_PKG="$pkg_filename"
+
+	print_ok
 }
 

@@ -80,6 +80,13 @@ pkg_write_arch() {
 # CALLED BY: build_pkg
 pkg_build_arch() {
 	local pkg_filename="$PWD/${1##*/}.pkg.tar"
+
+	if [ -e "$pkg_filename" ]; then
+		pkg_build_print_already_exists "${pkg_filename##*/}"
+		export ${pkg}_PKG="$pkg_filename"
+		return 0
+	fi
+
 	local tar_options='--create --group=root --owner=root'
 
 	case $OPTION_COMPRESSION in
@@ -109,5 +116,7 @@ pkg_build_arch() {
 	)
 
 	export ${pkg}_PKG="$pkg_filename"
+
+	print_ok
 }
 

@@ -67,8 +67,6 @@ build_pkg() {
 				liberror 'OPTION_PACKAGE' 'build_pkg'
 			;;
 		esac
-
-		print_ok
 	done
 }
 
@@ -84,6 +82,23 @@ pkg_print() {
 		;;
 		('en'|*)
 			string='Building %s'
+		;;
+	esac
+	printf "$string" "$1"
+}
+
+# print package building message
+# USAGE: pkg_build_print_already_exists $file
+# NEEDED VARS: (LANG)
+# CALLED BY: pkg_build_arch pkg_build_deb
+pkg_build_print_already_exists() {
+	local string
+	case "${LANG%_*}" in
+		('fr')
+			string='%s existe déjà.\n'
+		;;
+		('en'|*)
+			string='%s already exists.\n'
 		;;
 	esac
 	printf "$string" "$1"
