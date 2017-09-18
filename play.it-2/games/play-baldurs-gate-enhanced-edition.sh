@@ -34,7 +34,7 @@ set -o errexit
 # send your bug reports to vv221@dotslashplay.it
 ###
 
-script_version=20170918.1
+script_version=20170918.2
 
 # Set game-specific variables
 
@@ -56,8 +56,8 @@ ARCHIVE_GOG_OLD_VERSION='2.3.67.3-gog2.5.0.7'
 ARCHIVE_LIBSSL='libssl_1.0.0_32-bit.tar.gz'
 ARCHIVE_LIBSSL_MD5='9443cad4a640b2512920495eaf7582c4'
 
-ARCHIVE_DOC_PATH='data/noarch/docs'
-ARCHIVE_DOC_FILES='./*'
+ARCHIVE_DOC_DATA_PATH='data/noarch/docs'
+ARCHIVE_DOC_DATA_FILES='./*'
 
 ARCHIVE_GAME_BIN_PATH='data/noarch/game'
 ARCHIVE_GAME_BIN_FILES='./BaldursGate ./engine.lua'
@@ -68,21 +68,15 @@ ARCHIVE_GAME_AREAS_FILES='./data/AR*'
 ARCHIVE_GAME_L10N_PATH='data/noarch/game'
 ARCHIVE_GAME_L10N_FILES='./lang'
 
-ARCHIVE_GAME_MOVIES_PATH='data/noarch/game'
-ARCHIVE_GAME_MOVIES_FILES='./movies'
-
-ARCHIVE_GAME_MUSIC_PATH='data/noarch/game'
-ARCHIVE_GAME_MUSIC_FILES='./music'
-
 ARCHIVE_GAME_DATA_PATH='data/noarch/game'
-ARCHIVE_GAME_DATA_FILES='./*'
+ARCHIVE_GAME_DATA_FILES='./movies ./music ./chitin.key ./Manuals ./scripts ./data/25* ./data/C* ./data/D* ./data/E* ./data/G* ./data/H* ./data/I* ./data/L* ./data/M* ./data/N* ./data/O* ./data/P* ./data/S* ./data/T* ./data/v*'
 
 APP_MAIN_TYPE='native'
 APP_MAIN_EXE='BaldursGate'
 APP_MAIN_ICON='data/noarch/support/icon.png'
 APP_MAIN_ICON_RES='256'
 
-PACKAGES_LIST='PKG_AREAS PKG_L10N PKG_MOVIES PKG_MUSIC PKG_DATA PKG_BIN'
+PACKAGES_LIST='PKG_AREAS PKG_L10N PKG_DATA PKG_BIN'
 
 PKG_AREAS_ID="${GAME_ID}-areas"
 PKG_AREAS_DESCRIPTION='areas'
@@ -90,27 +84,21 @@ PKG_AREAS_DESCRIPTION='areas'
 PKG_L10N_ID="${GAME_ID}-l10n"
 PKG_L10N_DESCRIPTION='localizations'
 
-PKG_MOVIES_ID="${GAME_ID}-movies"
-PKG_MOVIES_DESCRIPTION='movies'
-
-PKG_MUSIC_ID="${GAME_ID}-music"
-PKG_MUSIC_DESCRIPTION='music'
-
 PKG_DATA_ID="${GAME_ID}-data"
 PKG_DATA_DESCRIPTION='data'
 
 PKG_BIN_ARCH='32'
-PKG_BIN_DEPS_DEB="$PKG_AREAS_ID, $PKG_L10N_ID, $PKG_MOVIES_ID, $PKG_MUSIC_ID, $PKG_DATA_ID, libc6, libstdc++6, libgl1-mesa-glx | libgl1, libjson0, libopenal1"
-PKG_BIN_DEPS_ARCH="$PKG_AREAS_ID $PKG_L10N_ID $PKG_MOVIES_ID $PKG_MUSIC_ID $PKG_DATA_ID lib32-libgl lib32-openal lib32-json-c"
+PKG_BIN_DEPS_DEB="$PKG_AREAS_ID, $PKG_L10N_ID, $PKG_DATA_ID, libc6, libstdc++6, libgl1-mesa-glx | libgl1, libjson0, libopenal1"
+PKG_BIN_DEPS_ARCH="$PKG_AREAS_ID $PKG_L10N_ID $PKG_DATA_ID lib32-glibc lib32-gcc-libs lib32-libgl lib32-json-c lib32-openal"
 
 # Load common functions
 
-target_version='2.0'
+target_version='2.1'
 
 if [ -z "$PLAYIT_LIB2" ]; then
 	[ -n "$XDG_DATA_HOME" ] || XDG_DATA_HOME="$HOME/.local/share"
-	if [ -e "$XDG_DATA_HOME/play.it/libplayit2.sh" ]; then
-		PLAYIT_LIB2="$XDG_DATA_HOME/play.it/libplayit2.sh"
+	if [ -e "$XDG_DATA_HOME/play.it/play.it-2/lib/libplayit2.sh" ]; then
+		PLAYIT_LIB2="$XDG_DATA_HOME/play.it/play.it-2/lib/libplayit2.sh"
 	elif [ -e './libplayit2.sh' ]; then
 		PLAYIT_LIB2='./libplayit2.sh'
 	else
@@ -130,24 +118,10 @@ ARCHIVE='ARCHIVE_GOG'
 
 extract_data_from "$SOURCE_ARCHIVE"
 
-PKG='PKG_BIN'
-organize_data 'GAME_BIN' "$PATH_GAME"
-
-PKG='PKG_AREAS'
-organize_data 'GAME_AREAS' "$PATH_GAME"
-
-PKG='PKG_L10N'
-organize_data 'GAME_L10N' "$PATH_GAME"
-
-PKG='PKG_MOVIES'
-organize_data 'GAME_MOVIES' "$PATH_GAME"
-
-PKG='PKG_MUSIC'
-organize_data 'GAME_MUSIC' "$PATH_GAME"
-
-PKG='PKG_DATA'
-organize_data 'DOC'       "$PATH_DOC"
-organize_data 'GAME_DATA' "$PATH_GAME"
+for PKG in $PACKAGES_LIST; do
+	organize_data "DOC_${PKG#PKG_}"  "$PATH_GAME"
+	organize_data "GAME_${PKG#PKG_}" "$PATH_GAME"
+done
 
 res="$APP_MAIN_ICON_RES"
 PATH_ICON="$PATH_ICON_BASE/${res}x${res}/apps"
@@ -183,7 +157,7 @@ EOF
 
 write_metadata 'PKG_BIN'
 rm "$postinst"
-write_metadata 'PKG_AREAS' 'PKG_L10N' 'PKG_MOVIES' 'PKG_MUSIC' 'PKG_DATA'
+write_metadata 'PKG_AREAS' 'PKG_L10N' 'PKG_DATA'
 build_pkg
 
 # Clean up
