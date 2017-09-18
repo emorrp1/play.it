@@ -34,11 +34,11 @@ set -o errexit
 # send your bug reports to vv221@dotslashplay.it
 ###
 
-script_version=20170701.1
+script_version=20170918.1
 
 # Set game-specific variables
 
-GAME_ID='baldurs-gate-ee'
+GAME_ID='baldurs-gate-enhanced-edition'
 GAME_NAME='Baldur’s Gate - Enhanced Edition'
 
 ARCHIVES_LIST='ARCHIVE_GOG ARCHIVE_GOG_OLD'
