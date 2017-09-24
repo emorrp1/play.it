@@ -28,9 +28,26 @@ write_bin() {
 
 		local app_type="$(eval printf -- '%b' \"\$${app}_TYPE\")"
 		if [ "$app_type" != 'scummvm' ]; then
-			local app_options="$(eval printf -- '%b' \"\$${app}_OPTIONS\")"
-			local app_prerun="$(eval printf -- '%b' \"\$${app}_PRERUN\")"
-			local app_postrun="$(eval printf -- '%b' \"\$${app}_POSTRUN\")"
+			local app_options
+			if [ -n "$(eval printf -- '%b' \"\$${app}_OPTIONS_${PKG#PKG_}\")" ]; then
+				app_options="$(eval printf -- '%b' \"\$${app}_OPTIONS_${PKG#PKG_}\")"
+			else
+				app_options="$(eval printf -- '%b' \"\$${app}_OPTIONS\")"
+			fi
+
+			local app_prerun
+			if [ -n "$(eval printf -- '%b' \"\$${app}_PRERUN_${PKG#PKG_}\")" ]; then
+				app_prerun="$(eval printf -- '%b' \"\$${app}_PRERUN_${PKG#PKG_}\")"
+			else
+				app_prerun="$(eval printf -- '%b' \"\$${app}_PRERUN\")"
+			fi
+
+			local app_postrun
+			if [ -n "$(eval printf -- '%b' \"\$${app}_POSTRUN_${PKG#PKG_}\")" ]; then
+				app_postrun="$(eval printf -- '%b' \"\$${app}_POSTRUN_${PKG#PKG_}\")"
+			else
+				app_postrun="$(eval printf -- '%b' \"\$${app}_POSTRUN\")"
+			fi
 
 			local app_exe
 			if [ -n "$(eval printf -- '%b' \"\$${app}_EXE_${PKG#PKG_}\")" ]; then
