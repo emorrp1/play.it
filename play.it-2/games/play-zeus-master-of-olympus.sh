@@ -34,7 +34,7 @@ set -o errexit
 # send your bug reports to vv221@dotslashplay.it
 ###
 
-script_version=20170923.1
+script_version=20170924.1
 
 # Set game-specific variables
 
@@ -63,6 +63,8 @@ ARCHIVE_GAME_DATA_FILES='./*.eng ./*.inf ./poseidon.ico ./zeus.ico ./adventures 
 CONFIG_FILES='./*.ini'
 DATA_DIRS='./save'
 
+APP_WINETRICKS='vd=1024x768'
+
 APP_MAIN_TYPE='wine'
 APP_MAIN_EXE='zeus.exe'
 APP_MAIN_ICON='poseidon.ico'
@@ -74,8 +76,8 @@ PKG_DATA_ID="${GAME_ID}-data"
 PKG_DATA_DESCRIPTION='data'
 
 PKG_BIN_ARCH='32'
-PKG_BIN_DEPS_DEB="$PKG_DATA_ID, wine32-development | wine32 | wine-bin | wine-i386 | wine-staging-i386, wine:amd64 | wine"
-PKG_BIN_DEPS_ARCH="$PKG_DATA_ID wine"
+PKG_BIN_DEPS_DEB="$PKG_DATA_ID, wine32-development | wine32 | wine-bin | wine-i386 | wine-staging-i386, wine:amd64 | wine, winetricks"
+PKG_BIN_DEPS_ARCH="$PKG_DATA_ID wine winetricks"
 
 # Load common functions
 
