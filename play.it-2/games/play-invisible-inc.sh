@@ -34,7 +34,7 @@ set -o errexit
 # send your bug reports to vv221@dotslashplay.it
 ###
 
-script_version=20170830.1
+script_version=20170924.1
 
 # Set game-specific variables
 
@@ -54,7 +54,7 @@ ARCHIVE_ICONS_MD5='37a62fed1dc4185e95db3e82e6695c1d'
 ARCHIVE_DOC1_DATA_PATH='data/noarch/docs'
 ARCHIVE_DOC1_DATA_FILES='./*'
 
-ARCHIVE_DOC2_DATA_PATH='data/noarch/games'
+ARCHIVE_DOC2_DATA_PATH='data/noarch/game'
 ARCHIVE_DOC2_DATA_FILES='./LICENSE'
 
 ARCHIVE_GAME_BIN32_PATH='data/noarch/game'
@@ -64,7 +64,7 @@ ARCHIVE_GAME_BIN64_PATH='data/noarch/game'
 ARCHIVE_GAME_BIN64_FILES='./InvisibleInc64 ./lib64'
 
 ARCHIVE_GAME_DATA_PATH='data/noarch/game'
-ARCHIVE_GAME_DATA_FILES='./anims.kwad ./characters.kwad ./errata.kwad ./gui.kwad ./hashes.dat ./images.kwad ./main.lua ./moai.lua ./movies.kwad ./scripts.zip ./sound.kwad'
+ARCHIVE_GAME_DATA_FILES='./*.kwad ./*.lua ./hashes.dat ./scripts.zip'
 
 ARCHIVE_ICONS_PATH='.'
 ARCHIVE_ICONS_FILES='./16x16 ./32x32 ./64x64 ./128x128 ./256x256'
