@@ -34,7 +34,7 @@ set -o errexit
 # send your bug reports to vv221@dotslashplay.it
 ###
 
-script_version=20170616.2
+script_version=20170924.1
 
 # Set game-specific variables
 
@@ -48,8 +48,8 @@ ARCHIVE_GOG_MD5='5e50e84c028a85eafe5dd5f2aa277fea'
 ARCHIVE_GOG_SIZE='820000'
 ARCHIVE_GOG_VERSION='1.0.1.0-gog2.0.0.2'
 
-ARCHIVE_DOC_PATH='app'
-ARCHIVE_DOC_FILES='./*.txt ./*.pdf'
+ARCHIVE_DOC_DATA_PATH='app'
+ARCHIVE_DOC_DATA_FILES='./*.txt ./*.pdf'
 
 ARCHIVE_GAME_BIN_PATH='app'
 ARCHIVE_GAME_BIN_FILES='./*.exe ./*.cfg ./*.inf ./emperor.ini ./binkw32.dll ./ijl10.dll ./mss32.dll ./sierrapt.dll'
@@ -59,6 +59,8 @@ ARCHIVE_GAME_DATA_FILES='./*.eng ./audio ./binks ./campaigns ./cities ./data ./d
 
 CONFIG_FILES='./*.cfg ./*.ini'
 DATA_DIRS='./campaigns ./save'
+
+APP_WINETRICKS='vd=1024x768'
 
 APP_MAIN_TYPE='wine'
 APP_MAIN_EXE='emperor.exe'
@@ -77,17 +79,17 @@ PKG_DATA_ID="${GAME_ID}-data"
 PKG_DATA_DESCRIPTION='data'
 
 PKG_BIN_ARCH='32'
-PKG_BIN_DEPS_DEB="$PKG_DATA_ID, wine32-development | wine32 | wine-bin | wine-i386 | wine-staging-i386, wine:amd64 | wine"
-PKG_BIN_DEPS_ARCH="$PKG_DATA_ID wine"
+PKG_BIN_DEPS_DEB="$PKG_DATA_ID, wine32-development | wine32 | wine-bin | wine-i386 | wine-staging-i386, wine:amd64 | wine, winetricks"
+PKG_BIN_DEPS_ARCH="$PKG_DATA_ID wine winetricks"
 
 # Load common functions
 
-target_version='2.0'
+target_version='2.1'
 
 if [ -z "$PLAYIT_LIB2" ]; then
 	[ -n "$XDG_DATA_HOME" ] || XDG_DATA_HOME="$HOME/.local/share"
-	if [ -e "$XDG_DATA_HOME/play.it/libplayit2.sh" ]; then
-		PLAYIT_LIB2="$XDG_DATA_HOME/play.it/libplayit2.sh"
+	if [ -e "$XDG_DATA_HOME/play.it/play.it-2/lib/libplayit2.sh" ]; then
+		PLAYIT_LIB2="$XDG_DATA_HOME/play.it/play.it-2/lib/libplayit2.sh"
 	elif [ -e './libplayit2.sh' ]; then
 		PLAYIT_LIB2='./libplayit2.sh'
 	else
@@ -102,13 +104,12 @@ fi
 
 extract_data_from "$SOURCE_ARCHIVE"
 
-PKG='PKG_BIN'
-organize_data 'GAME_BIN' "$PATH_GAME"
+for PKG in $PACKAGES_LIST; do
+	organize_data "DOC_${PKG#PKG_}"  "$PATH_DOC"
+	organize_data "GAME_${PKG#PKG_}" "$PATH_GAME"
+done
 
 PKG='PKG_DATA'
-organize_data 'GAME_DATA' "$PATH_GAME"
-organize_data 'DOC'       "$PATH_DOC"
-
 extract_icon_from "${PKG_BIN_PATH}${PATH_GAME}/$APP_MAIN_ICON1"
 extract_icon_from "${PKG_DATA_PATH}${PATH_GAME}/$APP_MAIN_ICON2"
 extract_icon_from "$PLAYIT_WORKDIR/icons"/*.ico
